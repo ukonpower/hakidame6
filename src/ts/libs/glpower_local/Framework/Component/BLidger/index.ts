@@ -9,6 +9,7 @@ import { SphereGeometry } from "../Geometry/SphereGeometry";
 import { CubeGeometry } from "../Geometry/CubeGeometry";
 import { BLidge, BLidgeNode, BLidgeLightParam } from "../../BLidge";
 import { CylinderGeometry } from "../Geometry/CylinderGeometry";
+import { Geometry } from "../Geometry";
 
 export class BLidger extends Component {
 
@@ -114,6 +115,16 @@ export class BLidger extends Component {
 				const cylinderParam = this.node.param as any;
 
 				entity.addComponent( 'geometry', new CylinderGeometry() );
+
+			} else if ( this.node.type == 'mesh' ) {
+
+				const geometryParam = this.node.param as any;
+
+				const geometry = new Geometry();
+				geometry.setAttribute( 'position', geometryParam.position, 3 );
+				geometry.setAttribute( 'normal', geometryParam.normal, 3 );
+				geometry.setAttribute( 'index', geometryParam.index, 3 );
+				entity.addComponent( 'geometry', geometry );
 
 			}
 

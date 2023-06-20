@@ -2,6 +2,7 @@ import * as GLP from 'glpower';
 import { canvas } from './Globals';
 import { Scene } from "./Scene";
 import config from '../../config.json';
+import { constructor } from 'assert';
 
 class App {
 
@@ -9,7 +10,56 @@ class App {
 	private canvas: HTMLCanvasElement;
 	private canvasWrap: HTMLElement;
 
+	private binaryStringToArrayBuffer( binaryString: string ) {
+
+		const bytes = new Uint8Array( binaryString.length );
+
+		for ( let i = 0; i < binaryString.length; i ++ ) {
+
+			const code = binaryString.charCodeAt( i );
+			bytes[ i ] = code;
+
+		}
+
+		return bytes.buffer;
+
+	}
+
+	private arrayBufferToBinaryString( arrayBuffer: ArrayBuffer ) {
+
+		let binaryString = "";
+		const bytes = new Uint8Array( arrayBuffer );
+		const len = bytes.byteLength;
+
+		for ( let i = 0; i < len; i ++ ) {
+
+			binaryString += String.fromCharCode( bytes[ i ] );
+
+		}
+
+		return binaryString;
+
+	}
+
+
 	constructor() {
+
+		const srcArray = new Float32Array( [ 1.23, 4.56, 7.89 ] );
+		const binaryString = this.arrayBufferToBinaryString( srcArray.buffer );
+		const base64Data = btoa( binaryString );
+		const base64 = "zcz2QgCAakPNzKxDmlnkQw==";
+		const binaryStringOut = atob( base64 );
+		const arrayBuffer = this.binaryStringToArrayBuffer( binaryStringOut );
+
+
+		console.log( srcArray );
+		console.log( binaryString );
+		console.log( base64Data );
+
+		console.log( new Float32Array( arrayBuffer ) );
+
+
+		// return;
 
 		const elm = document.createElement( "div" );
 		document.body.appendChild( elm );
@@ -22,6 +72,9 @@ class App {
 				DATE:${config.date}<br/>
 				<a href="../">../</a>
 			</div>
+		`;
+		elm.innerHTML = `
+			<div class="cw"></div>
 		`;
 
 		document.title = `${config.no} | HAKIDAME`;

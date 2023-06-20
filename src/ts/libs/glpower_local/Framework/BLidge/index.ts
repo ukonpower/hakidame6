@@ -1,3 +1,4 @@
+import { connected } from "process";
 import { FCurve } from "../../Animation/FCurve";
 import { FCurveGroup } from "../../Animation/FCurveGroup";
 import { FCurveKeyFrame, FCurveInterpolation } from "../../Animation/FCurveKeyFrame";
@@ -20,7 +21,7 @@ export type BLidgeNodeParam = {
 	name: string,
 	class: string,
 	type: BLidgeNodeType,
-	param?: BLidgeCameraParam | BLidgeMeshParam | BLidgeLightParamCommon
+	param?: BLidgeCameraParam | BLidgeMeshParamRaw | BLidgeLightParamCommon
 	parent: string,
 	children?: BLidgeNodeParam[],
 	animation?: BLidgeAnimationAccessor,
@@ -57,11 +58,18 @@ export type BLidgeCameraParam = {
 
 // mesh
 
+export type BLidgeMeshParamRaw = {
+	position: string,
+	uv: string,
+	normal: string,
+	index: string,
+}
+
 export type BLidgeMeshParam = {
-	position: number[],
-	uv: number[],
-	normal: number[],
-	index: number[],
+	position: Float32Array,
+	uv: Float32Array,
+	normal: Float32Array,
+	index: Uint16Array,
 }
 
 // light
@@ -294,8 +302,24 @@ export class BLidge extends EventEmitter {
 				material: mat,
 				type: nodeParam.type,
 				visible: nodeParam.visible,
-				param: nodeParam.param
 			};
+
+			const param = nodeParam.param;
+
+			if ( param && "position" in param ) {
+
+				node.param = {
+					position: new Float32Array( param.position ),
+					normal: new Float32Array( param.normal ),
+					uv: new Float32Array( param.uv ),
+					index: new Uint16Array( param.index ),
+				};
+
+			} else {
+
+				node.param = param;
+
+			}
 
 			if ( nodeParam.children ) {
 
