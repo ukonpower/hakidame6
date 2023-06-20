@@ -208,6 +208,21 @@ export class BLidge extends EventEmitter {
 		Load
 	-------------------------------*/
 
+	private binaryStringToArrayBuffer( binaryString: string ) {
+
+		const bytes = new Uint8Array( binaryString.length );
+
+		for ( let i = 0; i < binaryString.length; i ++ ) {
+
+			const code = binaryString.charCodeAt( i );
+			bytes[ i ] = code;
+
+		}
+
+		return bytes.buffer;
+
+	}
+
 	public loadJsonScene( jsonPath: string ) {
 
 		const req = new XMLHttpRequest();
@@ -309,10 +324,10 @@ export class BLidge extends EventEmitter {
 			if ( param && "position" in param ) {
 
 				node.param = {
-					position: new Float32Array( param.position ),
-					normal: new Float32Array( param.normal ),
-					uv: new Float32Array( param.uv ),
-					index: new Uint16Array( param.index ),
+					position: new Float32Array( this.binaryStringToArrayBuffer( atob( param.position ) ) ),
+					normal: new Float32Array( this.binaryStringToArrayBuffer( atob( param.normal ) ) ),
+					uv: new Float32Array( this.binaryStringToArrayBuffer( atob( param.uv ) ) ),
+					index: new Uint16Array( this.binaryStringToArrayBuffer( atob( param.index ) ) ),
 				};
 
 			} else {
