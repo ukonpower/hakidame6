@@ -1,10 +1,13 @@
 import * as GLP from 'glpower';
 
-import { globalUniforms } from '~/ts/Globals';
+import { globalUniforms, power } from '~/ts/Globals';
 
+import treeModelVert from './shaders/treeModel.vs';
 import treeVert from './shaders/tree.vs';
 import treeFrag from './shaders/tree.fs';
+
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import { TFModeler } from '~/ts/libs/TFModeler';
 
 export class Tree extends GLP.Entity {
 
@@ -46,6 +49,11 @@ export class Tree extends GLP.Entity {
 		geo.setAttribute( "instanceQuaternion", new Float32Array( quaternionArray ), 4, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceScale", new Float32Array( scaleArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "id", new Float32Array( idArray ), 3, { instanceDivisor: 1 } );
+
+
+		const modeler = new TFModeler( power );
+
+		const staticGeo = modeler.create( geo, treeModelVert );
 
 		// material
 

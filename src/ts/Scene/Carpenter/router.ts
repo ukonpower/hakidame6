@@ -16,19 +16,6 @@ export const router = ( node: GLP.BLidgeNode ) => {
 
 	const baseEntity = new GLP.Entity();
 
-
-	// material
-
-	if ( node.material.name == 'isu' ) {
-
-		baseEntity.addComponent( 'material', new GLP.Material( {
-			name: "tree",
-			type: [ "deferred", "shadowMap" ],
-			frag: isuFrag,
-		} ) );
-
-	}
-
 	return baseEntity;
 
 };
