@@ -659,11 +659,22 @@ export class Renderer extends GLP.Entity {
 
 				gl.bindVertexArray( vao.getVAO() );
 
+				const indexBuffer = vao.indexBuffer;
+
+				let indexBufferArrayType: number = gl.UNSIGNED_SHORT;
+
+				if ( indexBuffer && indexBuffer.array && indexBuffer.array.BYTES_PER_ELEMENT == 4 ) {
+
+					indexBufferArrayType = gl.UNSIGNED_INT;
+
+				}
+
+
 				if ( vao.instanceCount > 0 ) {
 
-					if ( vao.indexBuffer ) {
+					if ( indexBuffer ) {
 
-						gl.drawElementsInstanced( material.drawType, vao.indexCount, gl.UNSIGNED_SHORT, 0, vao.instanceCount );
+						gl.drawElementsInstanced( material.drawType, vao.indexCount, indexBufferArrayType, 0, vao.instanceCount );
 
 					} else {
 
@@ -673,9 +684,9 @@ export class Renderer extends GLP.Entity {
 
 				} else {
 
-					if ( vao.indexBuffer ) {
+					if ( indexBuffer ) {
 
-						gl.drawElements( material.drawType, vao.indexCount, gl.UNSIGNED_SHORT, 0 );
+						gl.drawElements( material.drawType, vao.indexCount, indexBufferArrayType, 0 );
 
 					} else {
 

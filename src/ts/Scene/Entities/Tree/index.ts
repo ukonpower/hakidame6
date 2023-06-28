@@ -55,8 +55,6 @@ export class Tree extends GLP.Entity {
 
 		const staticGeo = modeler.create( geo, shaderParse( treeModelVert, {} ) );
 
-		console.log( staticGeo );
-
 		this.addComponent( "geometry", staticGeo );
 
 		// material

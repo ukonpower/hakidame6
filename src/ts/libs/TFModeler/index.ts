@@ -75,8 +75,6 @@ export class TFModeler {
 
 					vao.use( () => {
 
-						console.log( vao, vao.vertCount );
-
 						if ( vao.instanceCount > 0 ) {
 
 							this.gl.drawArraysInstanced( this.gl.POINTS, 0, vao.vertCount, vao.instanceCount );
@@ -115,13 +113,22 @@ export class TFModeler {
 
 		const baseIndex = baseGeometry.getAttribute( 'index' );
 
+		let TypedArray: Uint16ArrayConstructor | Uint32ArrayConstructor = Uint16Array;
+
 		if ( baseIndex ) {
 
 			for ( let i = 0; i < instanceCount; i ++ ) {
 
 				for ( let j = 0; j < baseIndex.array.length; j ++ ) {
 
+					const index = baseIndex.array[ j ] + i * ( baseGeometry.vertCount );
 					indexArray.push( baseIndex.array[ j ] + i * ( baseGeometry.vertCount ) );
+
+					if ( index > 65535 ) {
+
+						TypedArray = Uint32Array;
+
+					}
 
 				}
 
@@ -129,7 +136,7 @@ export class TFModeler {
 
 		}
 
-		resultGeo.setAttribute( 'index', new Uint16Array( indexArray ), 1 );
+		resultGeo.setAttribute( 'index', new ( TypedArray )( indexArray ), 1 );
 
 		return resultGeo;
 

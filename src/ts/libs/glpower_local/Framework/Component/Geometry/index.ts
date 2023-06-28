@@ -57,11 +57,9 @@ export class Geometry extends Component {
 
 		this.attributes.forEach( ( attribute, name ) => {
 
-			if ( name != 'index' ) {
+			if ( name == 'index' || attribute.opt && attribute.opt.instanceDivisor ) return;
 
-				this.vertCount = Math.min( attribute.array.length / attribute.size, this.vertCount );
-
-			}
+			this.vertCount = Math.min( attribute.array.length / attribute.size, this.vertCount );
 
 		} );
 
