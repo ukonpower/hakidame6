@@ -1,4 +1,3 @@
-import console from 'console';
 import * as GLP from 'glpower';
 
 export class TFModeler {
@@ -38,20 +37,22 @@ export class TFModeler {
 		outBufferPosition.setData( new Float32Array( ( baseGeometry.attributes.get( 'position' )?.array.length || 0 ) * instanceCount ), 'vbo', this.gl.DYNAMIC_COPY );
 
 		const outBufferNormal = this.power.createBuffer();
-		outBufferPosition.setData( new Float32Array( ( baseGeometry.attributes.get( 'normal' )?.array.length || 0 ) * instanceCount ), 'vbo', this.gl.DYNAMIC_COPY );
+		outBufferNormal.setData( new Float32Array( ( baseGeometry.attributes.get( 'normal' )?.array.length || 0 ) * instanceCount ), 'vbo', this.gl.DYNAMIC_COPY );
 
 		tf.setBuffer( "position", outBufferPosition, 0 );
 		tf.setBuffer( "normal", outBufferNormal, 1 );
 
 		tf.bind( () => {
 
-			program.setShader( vertexShader, "void main(){ discard; }", { transformFeedbackVaryings: [ 'o_position', 'o_normal' ] } );
+			program.setShader( vertexShader, "#version 300 es\n void main(){ discard; }", { transformFeedbackVaryings: [ 'o_position', 'o_normal' ] } );
 
 		} );
 
 		const vao = program.getVAO();
 
 		if ( vao ) {
+
+			baseGeometry.createBuffer( this.power );
 
 			baseGeometry.attributes.forEach( ( attr, key ) => {
 
@@ -74,7 +75,17 @@ export class TFModeler {
 
 					vao.use( () => {
 
-						this.gl.drawArrays( this.gl.POINTS, 0, vao.vertCount );
+						console.log( vao, vao.vertCount );
+
+						if ( vao.instanceCount > 0 ) {
+
+							this.gl.drawArraysInstanced( this.gl.POINTS, 0, vao.vertCount, vao.instanceCount );
+
+						} else {
+
+							this.gl.drawArrays( this.gl.POINTS, 0, vao.vertCount );
+
+						}
 
 					} );
 
@@ -83,18 +94,42 @@ export class TFModeler {
 
 				} );
 
-				// this.gl.bindBuffer( this.gl.ARRAY_BUFFER, outBufferPosition.buffer );
-				// this.gl.getBufferSubData( this.gl.ARRAY_BUFFER, 0, this.audioBuffer.getChannelData( 0 ) );
 
-				// this.gl.bindBuffer( this.gl.ARRAY_BUFFER, bufferR.buffer );
-				// this.gl.getBufferSubData( this.gl.ARRAY_BUFFER, 0, this.audioBuffer.getChannelData( 1 ) );
+				const outPos = new Float32Array( outBufferPosition.array!.length );
+				const outNormal = new Float32Array( outBufferNormal.array!.length );
 
-				resultGeo.setAttribute( 'position', outBufferPosition.array!, 3 );
-				resultGeo.setAttribute( 'position', outBufferNormal.array!, 3 );
+				this.gl.bindBuffer( this.gl.ARRAY_BUFFER, outBufferPosition.buffer );
+				this.gl.getBufferSubData( this.gl.ARRAY_BUFFER, 0, outPos );
+
+				this.gl.bindBuffer( this.gl.ARRAY_BUFFER, outBufferNormal.buffer );
+				this.gl.getBufferSubData( this.gl.ARRAY_BUFFER, 0, outNormal );
+
+				resultGeo.setAttribute( 'position', outPos, 3 );
+				resultGeo.setAttribute( 'normal', outNormal, 3 );
 
 			} );
 
 		}
+
+		const indexArray: number[] = [];
+
+		const baseIndex = baseGeometry.getAttribute( 'index' );
+
+		if ( baseIndex ) {
+
+			for ( let i = 0; i < instanceCount; i ++ ) {
+
+				for ( let j = 0; j < baseIndex.array.length; j ++ ) {
+
+					indexArray.push( baseIndex.array[ j ] + i * ( baseGeometry.vertCount ) );
+
+				}
+
+			}
+
+		}
+
+		resultGeo.setAttribute( 'index', new Uint16Array( indexArray ), 1 );
 
 		return resultGeo;
 

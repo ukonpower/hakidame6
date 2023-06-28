@@ -1,12 +1,14 @@
-#version 300 es
+#include <common>
+#include <vert_h>
+
+out vec3 o_position;
+out vec3 o_normal;
 
 layout (location = 3) in vec2 computeUV;
 layout (location = 4) in vec3 id;
 layout (location = 5) in vec3 instancePosition;
 layout (location = 6) in vec4 instanceQuaternion;
 layout (location = 7) in vec3 instanceScale;
-
-// uniform float uTime;
 
 mat4 qua2mat( vec4 q ){
 
@@ -25,6 +27,8 @@ void main( void ) {
 
 	#include <vert_in>
 
+	outPos = position;
+
 	outPos.y += 0.5;
 
 	mat4 rot = qua2mat( instanceQuaternion );
@@ -32,9 +36,9 @@ void main( void ) {
 	outNormal.xyz = ( rot * vec4( outNormal.xyz, 1.0) ).xyz;
 
 	outPos *= instanceScale;
-
 	outPos += instancePosition;
-	
-	#include <vert_out>
+
+	o_position = outPos;
+	o_normal = outNormal;
 	
 }

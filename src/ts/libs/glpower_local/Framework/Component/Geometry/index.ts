@@ -17,7 +17,7 @@ type DefaultAttributeName = 'position' | 'uv' | 'normal' | 'index';
 
 export class Geometry extends Component {
 
-	public count: number;
+	public vertCount: number;
 	public attributes: Map<string, Attribute >;
 	public needsUpdate: Map<GLPowerVAO, boolean>;
 
@@ -25,7 +25,7 @@ export class Geometry extends Component {
 
 		super();
 
-		this.count = 0;
+		this.vertCount = 0;
 		this.attributes = new Map();
 		this.needsUpdate = new Map();
 
@@ -53,15 +53,13 @@ export class Geometry extends Component {
 
 	private updateVertCount() {
 
-		const keys = Object.keys( this.attributes );
-
-		this.count = keys.length > 0 ? Infinity : 0;
+		this.vertCount = this.attributes.size > 0 ? Infinity : 0;
 
 		this.attributes.forEach( ( attribute, name ) => {
 
 			if ( name != 'index' ) {
 
-				this.count = Math.min( attribute.array.length / attribute.size, this.count );
+				this.vertCount = Math.min( attribute.array.length / attribute.size, this.vertCount );
 
 			}
 

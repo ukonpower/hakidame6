@@ -8,6 +8,7 @@ import treeFrag from './shaders/tree.fs';
 
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 import { TFModeler } from '~/ts/libs/TFModeler';
+import { shaderParse } from '../../Renderer/ShaderParser';
 
 export class Tree extends GLP.Entity {
 
@@ -44,16 +45,19 @@ export class Tree extends GLP.Entity {
 
 		_( new GLP.Vector(), new GLP.Quaternion(), 1.0 );
 
-		const geo = this.addComponent( "geometry", new GLP.CubeGeometry( 0.2, 1.0, 0.2 ) );
+		const geo = new GLP.CubeGeometry( 0.2, 1.0, 0.2 );
 		geo.setAttribute( "instancePosition", new Float32Array( positionArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceQuaternion", new Float32Array( quaternionArray ), 4, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceScale", new Float32Array( scaleArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "id", new Float32Array( idArray ), 3, { instanceDivisor: 1 } );
 
-
 		const modeler = new TFModeler( power );
 
-		const staticGeo = modeler.create( geo, treeModelVert );
+		const staticGeo = modeler.create( geo, shaderParse( treeModelVert, {} ) );
+
+		console.log( staticGeo );
+
+		this.addComponent( "geometry", staticGeo );
 
 		// material
 

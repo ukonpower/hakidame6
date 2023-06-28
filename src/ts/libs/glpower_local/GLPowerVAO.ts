@@ -115,7 +115,11 @@ export class GLPowerVAO {
 
 			}
 
-			this.vertCount = Math.max( this.vertCount, attribute.count );
+			if ( attribute.instanceDivisor == undefined && name != 'index' ) {
+
+				this.vertCount = Math.max( this.vertCount, attribute.count );
+
+			}
 
 			if ( attribute.instanceDivisor !== undefined && attribute.instanceDivisor > 0 ) {
 
