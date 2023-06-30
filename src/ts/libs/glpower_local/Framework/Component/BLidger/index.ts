@@ -122,6 +122,7 @@ export class BLidger extends Component {
 
 				const geometry = new Geometry();
 				geometry.setAttribute( 'position', geometryParam.position, 3 );
+				geometry.setAttribute( 'uv', geometryParam.uv, 2 );
 				geometry.setAttribute( 'normal', geometryParam.normal, 3 );
 				geometry.setAttribute( 'index', geometryParam.index, 3 );
 				entity.addComponent( 'geometry', geometry );

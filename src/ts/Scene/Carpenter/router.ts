@@ -2,7 +2,7 @@ import * as GLP from 'glpower';
 
 import { Tree } from '../Entities/Tree';
 
-import isuFrag from './shaders/isu.fs';
+import { Cave } from '../Entities/Cave';
 
 export const router = ( node: GLP.BLidgeNode ) => {
 
@@ -11,6 +11,10 @@ export const router = ( node: GLP.BLidgeNode ) => {
 	if ( node.class == "Tree" ) {
 
 		return new Tree();
+
+	} else if ( node.class == "Cave" ) {
+
+		return new Cave();
 
 	}
 

@@ -99,8 +99,8 @@ export class MainCamera extends GLP.Entity {
 
 		const lookAt = this.addComponent( 'lookAt', new LookAt() );
 
-		this.addComponent( 'shakeViewer', new ShakeViewer( 0.5 ) );
-		this.addComponent( 'rotateViewer', new RotateViewer( 2.0 ) );
+		this.addComponent( 'shakeViewer', new ShakeViewer( 0.9 ) );
+		// this.addComponent( 'rotateViewer', new RotateViewer( 2.0 ) );
 
 		// resolution
 
