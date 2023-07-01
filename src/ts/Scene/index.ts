@@ -1,6 +1,6 @@
 import * as GLP from 'glpower';
 import { Carpenter } from './Carpenter';
-import { gl, globalUniforms, power } from '../Globals';
+import { blidge, gl, globalUniforms, power } from '../Globals';
 
 import { MainCamera } from './Entities/MainCamera';
 import { Renderer } from './Renderer';
@@ -78,6 +78,8 @@ export class Scene extends GLP.EventEmitter {
 		this.deltaTime = ( currentTime - this.currentTime ) / 1000;
 		this.elapsedTime += this.deltaTime;
 		this.currentTime = currentTime;
+
+		blidge.frame.current = this.elapsedTime * 30 % blidge.frame.end;
 
 		globalUniforms.time.uTime.value = this.elapsedTime;
 		globalUniforms.time.uFractTime.value = this.elapsedTime % 1;

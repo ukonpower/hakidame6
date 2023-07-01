@@ -14,10 +14,9 @@ class App {
 		document.body.appendChild( elm );
 		elm.innerHTML = `
 			<div class="cw"></div>
-			<h1>HAKIDAME</h1>
+			<h1>NO.${config.no}/${config.title || 'UNTITLED'}</h1>
 			<div class="text">
-				NO.${config.no}<br/>
-				TITLE:${config.title || 'None'}<br/>
+				<br/>
 				DATE:${config.date}<br/>
 				<a href="../">../</a>
 			</div>
