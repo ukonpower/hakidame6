@@ -1,8 +1,7 @@
 import * as GLP from 'glpower';
 
-import { canvas, gl, globalUniforms, power } from "~/ts/Globals";
+import { blidge, canvas, gl, globalUniforms, power } from "~/ts/Globals";
 import { LookAt } from '../../Components/LookAt';
-import { ShakeViewer } from '../../Components/ShakeViewer';
 
 import fxaaFrag from './shaders/fxaa.fs';
 import bloomBlurFrag from './shaders/bloomBlur.fs';
@@ -15,7 +14,6 @@ import dofBokeh from './shaders/dofBokeh.fs';
 import ssCompositeFrag from './shaders/ssComposite.fs';
 import compositeFrag from './shaders/composite.fs';
 import { OrbitControls } from '../../Components/OrbitControls';
-import { RotateViewer } from '../../Components/RotateViewer';
 
 export class MainCamera extends GLP.Entity {
 
@@ -99,7 +97,7 @@ export class MainCamera extends GLP.Entity {
 
 		const lookAt = this.addComponent( 'lookAt', new LookAt() );
 
-		this.addComponent( 'shakeViewer', new ShakeViewer( 0.9 ) );
+		// this.addComponent( 'shakeViewer', new ShakeViewer( 0.9 ) );
 		// this.addComponent( 'rotateViewer', new RotateViewer( 2.0 ) );
 
 		// resolution
@@ -531,6 +529,35 @@ export class MainCamera extends GLP.Entity {
 		this.rtDofCoc.setSize( resolutionHalf );
 		this.rtDofBokeh.setSize( resolutionHalf );
 		this.rtDofComposite.setSize( this.resolution );
+
+	}
+
+	public addComponent<T extends GLP.Component>( name: GLP.BuiltInComponents, component: T ): T {
+
+		super.addComponent( name, component );
+
+		if ( name == 'blidger' ) {
+
+			const blidger = component as unknown as GLP.BLidger;
+			const node = blidger.node;
+
+			const cameraStateCurve = blidge.getCurveGroup( node.animation.state )!;
+
+			this.on( "update", ( e: GLP.EntityUpdateEvent ) => {
+
+				const focalLength = cameraStateCurve.setFrame( blidge.frame.current ).value.x;
+
+				const ff = 2 * Math.atan( 12 / ( 2 * focalLength ) ) / Math.PI * 180;
+				this.baseFov = ff;
+
+				this.updateCameraParams( this.resolution );
+
+			} );
+
+
+		}
+
+		return component;
 
 	}
 

@@ -105,6 +105,7 @@ export class TFModeler {
 				resultGeo.setAttribute( 'position', outPos, 3 );
 				resultGeo.setAttribute( 'normal', outNormal, 3 );
 
+
 			} );
 
 		}
@@ -135,6 +136,8 @@ export class TFModeler {
 			}
 
 		}
+
+
 
 		resultGeo.setAttribute( 'index', new ( TypedArray )( indexArray ), 1 );
 

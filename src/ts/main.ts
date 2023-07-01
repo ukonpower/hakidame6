@@ -22,9 +22,6 @@ class App {
 				<a href="../">../</a>
 			</div>
 		`;
-		elm.innerHTML = `
-			<div class="cw"></div>
-		`;
 
 		document.title = `${config.no} | HAKIDAME`;
 

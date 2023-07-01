@@ -35,7 +35,7 @@ export class Tree extends GLP.Entity {
 
 			for ( let i = 0; i < 3; i ++ ) {
 
-				_( posFinish.clone(), rot.clone().multiply( new GLP.Quaternion().setFromEuler( new GLP.Euler( Math.random(), Math.random() * Math.PI * 2.0, 0 ) ) ), scale * ( 0.53 + Math.random() * 0.40 ) );
+				_( posFinish.clone(), rot.clone().multiply( new GLP.Quaternion().setFromEuler( new GLP.Euler( Math.random(), Math.random() * Math.PI * 2.2, 0 ) ) ), scale * ( 0.53 + Math.random() * 0.41 ) );
 
 			}
 
@@ -45,7 +45,7 @@ export class Tree extends GLP.Entity {
 
 		_( new GLP.Vector(), new GLP.Quaternion(), 1.0 );
 
-		const geo = new GLP.CubeGeometry( 0.2, 1.0, 0.2 );
+		const geo = new GLP.CylinderGeometry( 0.1, 0.1, 1.0 );
 		geo.setAttribute( "instancePosition", new Float32Array( positionArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceQuaternion", new Float32Array( quaternionArray ), 4, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceScale", new Float32Array( scaleArray ), 3, { instanceDivisor: 1 } );

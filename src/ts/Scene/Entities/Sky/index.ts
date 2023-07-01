@@ -1,29 +1,29 @@
 import * as GLP from 'glpower';
 
-import floorFrag from './shaders/floor.fs';
+import skyFrag from './shaders/sky.fs';
 import { globalUniforms } from '~/ts/Globals';
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 
-export class Floor extends GLP.Entity {
+export class Sky extends GLP.Entity {
 
 	constructor() {
 
 		super();
 
 		const mat = this.addComponent( "material", new GLP.Material( {
-			name: "floor",
+			name: "cave",
 			type: [ "deferred", "shadowMap" ],
 			uniforms: GLP.UniformsUtils.merge( globalUniforms.time ),
-			frag: hotGet( 'floorFrag', floorFrag )
+			frag: hotGet( 'skyFrag', skyFrag )
 		} ) );
 
 		if ( import.meta.hot ) {
 
-			import.meta.hot.accept( "./shaders/floor.fs", ( module ) => {
+			import.meta.hot.accept( "./shaders/sky.fs", ( module ) => {
 
 				if ( module ) {
 
-					mat.frag = hotUpdate( 'floor', module.default );
+					mat.frag = hotUpdate( 'skyFrag', module.default );
 					mat.requestUpdate();
 
 				}

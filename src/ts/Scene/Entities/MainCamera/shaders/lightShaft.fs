@@ -102,7 +102,7 @@ void main( void ) {
 				lightShaftSum += sLight.color * 
 					getShadow( rayPos, spotLightCamera[ LOOP_INDEX ], spotLightShadowMap[ LOOP_INDEX ] ) * 
 					spotAttenuation * pow( clamp( 1.0 - spotDistance / sLight.distance, 0.0, 1.0 ),  sLight.decay * 1.9 ) *
-					rayStepLength * 0.04;
+					rayStepLength * 0.02;
 
 			#pragma loop_end
 				
